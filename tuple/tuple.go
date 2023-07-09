@@ -1,13 +1,13 @@
 package tuple
 
 const (
-	VEC3 float64 = 0.0
-	PNT3 float64 = 1.0
+	VEC3 byte = 0
+	PNT3 byte = 1
 )
 
 type Tuple3 struct {
 	X, Y, Z float64
-	Type    float64
+	Type    byte
 }
 
 func NewVec3(X, Y, Z float64) *Tuple3 {

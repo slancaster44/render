@@ -32,7 +32,7 @@ func TestMath(t *testing.T) {
 
 	v2 := tuple.NewVec3(2, 2, 2)
 	r4 := tuple.NewVec3(4, 4, 4)
-	assert(tuple.ScalarMultiply(v2, 2), r4)
+	assert(tuple.ScalarSlowMultiply(v2, 2), r4)
 	assert(tuple.ScalarDivide(r4, 2), v2)
 
 	v3 := tuple.NewVec3(1, 2, 3)
@@ -53,15 +53,6 @@ func TestMath(t *testing.T) {
 }
 
 var simd_range int = 100000
-
-func BenchmarkX86_SIMD(b *testing.B) {
-	for i := 0; i < simd_range; i++ {
-		j := float64(i)
-		t1 := [4]float64{j - 2, j + 3, j - 1}
-		t2 := [4]float64{j, j - 1, j - 2}
-		tuple.Add_x86_Simd(t1, t2)
-	}
-}
 
 func BenchmarkAdd(b *testing.B) {
 	for i := 0; i < simd_range; i++ {

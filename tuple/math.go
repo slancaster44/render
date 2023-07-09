@@ -27,7 +27,7 @@ func CrossProduct(t1, t2 *Tuple3) *Tuple3 {
 	return NewVec3(t1.Y*t2.Z-t1.Z*t2.Y, t1.Z*t2.X-t1.X*t2.Z, t1.X*t2.Y-t1.Y*t2.X)
 }
 
-func ScalarMultiply(t1 *Tuple3, factor float64) *Tuple3 {
+func ScalarSlowMultiply(t1 *Tuple3, factor float64) *Tuple3 {
 	return &Tuple3{t1.X * factor, t1.Y * factor, t1.Z * factor, t1.Type}
 }
 
