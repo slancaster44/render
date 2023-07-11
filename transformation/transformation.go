@@ -1,11 +1,22 @@
 package transformation
 
 import (
-	"math"
 	"render/tuple"
+	"render/utility"
 )
 
 type Transformation func(t1 *tuple.Tuple3) *tuple.Tuple3
+
+func Compose(ts ...Transformation) Transformation {
+	return func(t1 *tuple.Tuple3) *tuple.Tuple3 {
+		var out *tuple.Tuple3
+		for _, tr := range ts {
+			out = tr(t1)
+		}
+
+		return out
+	}
+}
 
 func Translation(x, y, z float64) Transformation {
 	return func(t1 *tuple.Tuple3) *tuple.Tuple3 {
@@ -42,8 +53,8 @@ func InverseScaling(x, y, z float64) Transformation {
 }
 
 func RotationX(radians float64) Transformation {
-	cosR := math.Cos(radians)
-	sinR := math.Sin(radians)
+	cosR := utility.Cos(radians)
+	sinR := utility.Sin(radians)
 
 	return func(t1 *tuple.Tuple3) *tuple.Tuple3 {
 		return &tuple.Tuple3{
@@ -56,8 +67,8 @@ func RotationX(radians float64) Transformation {
 }
 
 func InverseRotationX(radians float64) Transformation {
-	cosR := math.Cos(-radians)
-	sinR := math.Sin(-radians)
+	cosR := utility.Cos(-radians)
+	sinR := utility.Sin(-radians)
 
 	return func(t1 *tuple.Tuple3) *tuple.Tuple3 {
 		return &tuple.Tuple3{
@@ -70,8 +81,8 @@ func InverseRotationX(radians float64) Transformation {
 }
 
 func RotationY(radians float64) Transformation {
-	cosR := math.Cos(radians)
-	sinR := math.Sin(radians)
+	cosR := utility.Cos(radians)
+	sinR := utility.Sin(radians)
 
 	return func(t1 *tuple.Tuple3) *tuple.Tuple3 {
 		return &tuple.Tuple3{
@@ -84,8 +95,8 @@ func RotationY(radians float64) Transformation {
 }
 
 func InverseRotationY(radians float64) Transformation {
-	cosR := math.Cos(-radians)
-	sinR := math.Sin(-radians)
+	cosR := utility.Cos(-radians)
+	sinR := utility.Sin(-radians)
 
 	return func(t1 *tuple.Tuple3) *tuple.Tuple3 {
 		return &tuple.Tuple3{
@@ -98,8 +109,8 @@ func InverseRotationY(radians float64) Transformation {
 }
 
 func RotationZ(radians float64) Transformation {
-	cosR := math.Cos(radians)
-	sinR := math.Sin(radians)
+	cosR := utility.Cos(radians)
+	sinR := utility.Sin(radians)
 
 	return func(t1 *tuple.Tuple3) *tuple.Tuple3 {
 		return &tuple.Tuple3{
@@ -112,14 +123,38 @@ func RotationZ(radians float64) Transformation {
 }
 
 func InverseRotationZ(radians float64) Transformation {
-	cosR := math.Cos(-radians)
-	sinR := math.Sin(-radians)
+	cosR := utility.Cos(-radians)
+	sinR := utility.Sin(-radians)
 
 	return func(t1 *tuple.Tuple3) *tuple.Tuple3 {
 		return &tuple.Tuple3{
 			X:    cosR*t1.X - sinR*t1.Y,
 			Y:    sinR*t1.X + cosR*t1.Y,
 			Z:    t1.Z,
+			Type: t1.Type,
+		}
+	}
+}
+
+//For variable nm, the value indicates how much input t1.n effects the output.m
+//For example, the greater the yx, the more the value of t1.y will efect the output.x
+func Shear(yx, zx, xy, zy, xz, yz float64) Transformation {
+	return func(t1 *tuple.Tuple3) *tuple.Tuple3 {
+		return &tuple.Tuple3{
+			X:    yx*t1.X + zx*t1.X,
+			Y:    xy*t1.Y + zy*t1.Y,
+			Z:    yz*t1.Z + xz*t1.Z,
+			Type: t1.Type,
+		}
+	}
+}
+
+func InverseShear(yx, zx, xy, zy, xz, yz float64) Transformation {
+	return func(t1 *tuple.Tuple3) *tuple.Tuple3 {
+		return &tuple.Tuple3{
+			X:    t1.X / (yx + zx),
+			Y:    t1.Y / (xy + zy),
+			Z:    t1.Z / (xz + yz),
 			Type: t1.Type,
 		}
 	}

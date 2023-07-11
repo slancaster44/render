@@ -32,7 +32,7 @@ func TestMath(t *testing.T) {
 
 	v2 := tuple.NewVec3(2, 2, 2)
 	r4 := tuple.NewVec3(4, 4, 4)
-	assert(tuple.ScalarSlowMultiply(v2, 2), r4)
+	assert(tuple.ScalarMultiply(v2, 2), r4)
 	assert(tuple.ScalarDivide(r4, 2), v2)
 
 	v3 := tuple.NewVec3(1, 2, 3)
@@ -52,13 +52,18 @@ func TestMath(t *testing.T) {
 	assert(r6, tuple.CrossProduct(v1, v2))
 }
 
-var simd_range int = 100000
+func TestReflection(t *testing.T) {
+	v := tuple.NewVec3(1, -1, 0)
+	n := tuple.NewVec3(0, 1, 0)
 
-func BenchmarkAdd(b *testing.B) {
-	for i := 0; i < simd_range; i++ {
-		j := float64(i)
-		t1 := tuple.NewVec3(j-2, j+3, j-1)
-		t2 := tuple.NewVec3(j, j-1, j-2)
-		tuple.Add(t1, t2)
+	if !tuple.Equal(tuple.Reflect(v, n), tuple.NewVec3(1, 1, 0)) {
+		t.Errorf("Reflection failed")
+	}
+
+	v = tuple.NewVec3(0, -1, 0)
+	n = tuple.NewVec3(0.707106, 0.707106, 0)
+
+	if !tuple.Equal(tuple.Reflect(v, n), tuple.NewVec3(1, 0, 0)) {
+		t.Errorf("Reflection failed %v", tuple.Reflect(v, n))
 	}
 }

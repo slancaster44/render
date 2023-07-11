@@ -27,7 +27,7 @@ func CrossProduct(t1, t2 *Tuple3) *Tuple3 {
 	return NewVec3(t1.Y*t2.Z-t1.Z*t2.Y, t1.Z*t2.X-t1.X*t2.Z, t1.X*t2.Y-t1.Y*t2.X)
 }
 
-func ScalarSlowMultiply(t1 *Tuple3, factor float64) *Tuple3 {
+func ScalarMultiply(t1 *Tuple3, factor float64) *Tuple3 {
 	return &Tuple3{t1.X * factor, t1.Y * factor, t1.Z * factor, t1.Type}
 }
 
@@ -45,7 +45,7 @@ func Magnitude(t1 *Tuple3) float64 {
 
 func Normalize(t1 *Tuple3) *Tuple3 {
 	mag := Magnitude(t1)
-	return &Tuple3{t1.X / mag, t1.Y / mag, t1.X / mag, t1.Type}
+	return &Tuple3{t1.X / mag, t1.Y / mag, t1.Z / mag, t1.Type}
 }
 
 func Distance(t1, t2 *Tuple3) float64 {
@@ -54,4 +54,8 @@ func Distance(t1, t2 *Tuple3) float64 {
 
 func Direction(from, to *Tuple3) *Tuple3 {
 	return Normalize(Subtract(to, from))
+}
+
+func Reflect(vector, normal *Tuple3) *Tuple3 {
+	return Subtract(vector, ScalarMultiply(normal, 2*DotProduct(vector, normal)))
 }

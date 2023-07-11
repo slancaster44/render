@@ -35,7 +35,7 @@ func TestRotationX(t *testing.T) {
 
 	r0 := tuple.NewPnt3(0, 0, 1)
 	if !tuple.Equal(r0, rotate2(p1)) || !tuple.Equal(inverse(rotate2(p1)), p1) {
-		t.Errorf("Rotate X failed")
+		t.Errorf("Rotate X failed %v", inverse(rotate2(p1)))
 	}
 }
 
@@ -46,7 +46,7 @@ func TestRotationZ(t *testing.T) {
 
 	r0 := tuple.NewPnt3(-1, 0, 0)
 	if !tuple.Equal(r0, rotate2(p1)) || !tuple.Equal(inverse(rotate2(p1)), p1) {
-		t.Errorf("Rotate Y failed %v", rotate2(p1))
+		t.Errorf("Rotate Z failed %v", rotate2(p1))
 	}
 }
 
@@ -61,6 +61,17 @@ func TestRotationY(t *testing.T) {
 	}
 }
 
+func TestShear(t *testing.T) {
+	p1 := tuple.NewPnt3(1, 1, 1)
+	trans := Shear(1, 1, 1, 1, 1, 1)
+	inverse := InverseShear(1, 1, 1, 1, 1, 1)
+
+	out := tuple.NewPnt3(2, 2, 2)
+	if !tuple.Equal(out, trans(p1)) || !tuple.Equal(inverse(trans(p1)), p1) {
+		t.Errorf("Shear failed %v %v %v", p1, trans(p1), inverse(trans(p1)))
+	}
+}
+
 func BenchmarkScaling(b *testing.B) {
 	scale := Scaling(2, 3, 4)
 
@@ -72,9 +83,21 @@ func BenchmarkScaling(b *testing.B) {
 }
 
 func BenchmarkRotateX(b *testing.B) {
-	rotate := RotationX(math.Pi / 4)
 
-	for i := 0; i < 32000; i++ {
+	for i := 0; i < 512000; i++ {
+		rotate := RotationX(math.Pi / 4)
+
+		p1 := tuple.NewPnt3(-4, 6, 8)
+
+		rotate(p1)
+	}
+}
+
+func BenchmarkRotateInverseX(b *testing.B) {
+
+	for i := 0; i < 512000; i++ {
+		rotate := InverseRotationX(math.Pi / 4)
+
 		p1 := tuple.NewPnt3(-4, 6, 8)
 
 		rotate(p1)
