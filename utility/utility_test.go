@@ -35,6 +35,19 @@ func TestTrig(t *testing.T) {
 	}
 }
 
+func TestDoJobs(t *testing.T) {
+	list := []int{1, 2, 3, 4, 5, 6, 7, 8, 9}
+
+	job_fn := func(x int) int {
+		return x + 1
+	}
+
+	output := DoJobs(list, 4, job_fn)
+	if len(output) != len(list) || !Contains(output, 10) || Contains(output, 1) {
+		t.Errorf("Do jobs test failed %v", output)
+	}
+}
+
 func BenchmarkMathSin(b *testing.B) {
 	for i := 0; i < 16000; i++ {
 		math.Sin(math.Pi / 4)

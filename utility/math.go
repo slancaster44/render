@@ -44,7 +44,26 @@ func Cos(radians float64) float64 {
 	return float64((sinTable[i0] + sinTable[i1]) / 2)
 }
 
-/*TODO: Broken, positive values when should be negative */
 func Tan(radians float64) float64 {
 	return -(Sin(radians) / Cos(radians))
+}
+
+func Min(x, y, z float64) float64 {
+	if x < y && x < z {
+		return x
+	} else if y < z {
+		return y
+	}
+
+	return z
+}
+
+func Max(x, y, z float64) float64 {
+	if x > y && x > z {
+		return x
+	} else if y > z {
+		return y
+	}
+
+	return z
 }
