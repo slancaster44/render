@@ -41,51 +41,19 @@ func (t *Triangle) Bake() {
 	}
 	startX, startY, endX, endY := boundingBox()
 
-	/*Determines if two points fall on the oppisate sides
-	 * of the triangles bounding box
-	 */
-	areOpposites := func(p1, p2 *tuple.Tuple3) bool {
-		return (p1.X == startX && p2.X == endX) ||
-			(p2.X == startX && p1.X == endX) ||
-			(p1.Y == startY && p2.Y == endY) ||
-			(p2.Y == startY && p1.X == endY)
-	}
-
-	//edge0 := [2]*tuple.Tuple3{t.p2d2, t.p2d1}
-	//edge1 := [2]*tuple.Tuple3{t.p2d3, t.p2d2}
-	//edge2 := [2]*tuple.Tuple3{t.p2d1, t.p2d3}
-
-	var edge0 [2]*tuple.Tuple3
-	var edge1 [2]*tuple.Tuple3
-	var edge2 [2]*tuple.Tuple3
-
-	if areOpposites(t.p2d2, t.p2d1) {
-		edge0 = [2]*tuple.Tuple3{t.p2d2, t.p2d1}
-		edge1 = [2]*tuple.Tuple3{t.p2d3, t.p2d2}
-		edge2 = [2]*tuple.Tuple3{t.p2d1, t.p2d3}
-	} else if areOpposites(t.p2d1, t.p2d3) {
-		edge0 = [2]*tuple.Tuple3{t.p2d1, t.p2d3}
-		edge1 = [2]*tuple.Tuple3{t.p2d3, t.p2d2}
-		edge2 = [2]*tuple.Tuple3{t.p2d2, t.p2d1}
-	} else {
-		edge0 = [2]*tuple.Tuple3{t.p2d3, t.p2d2}
-		edge1 = [2]*tuple.Tuple3{t.p2d2, t.p2d1}
-		edge2 = [2]*tuple.Tuple3{t.p2d1, t.p2d3}
-	}
-
 	for x := startX; x <= endX; x++ {
 		for y := startY; y <= endY; y++ {
-			determinate := ((edge0[1].X - edge0[0].X) * (y - edge0[0].Y)) - ((edge0[1].Y - edge0[0].Y) * (x - edge0[0].X))
+			determinate := ((t.p2d1.X - t.p2d2.X) * (y - t.p2d2.Y)) - ((t.p2d1.Y - t.p2d2.Y) * (x - t.p2d2.X))
 			if determinate < 0.0 {
 				continue
 			}
 
-			determinate = ((edge1[1].X - edge1[0].X) * (y - edge1[0].Y)) - ((edge1[1].Y - edge1[0].Y) * (x - edge1[0].X))
+			determinate = ((t.p2d2.X - t.p2d3.X) * (y - t.p2d3.Y)) - ((t.p2d2.Y - t.p2d3.Y) * (x - t.p2d3.X))
 			if determinate < 0.0 {
 				continue
 			}
 
-			determinate = ((edge2[1].X - edge2[0].X) * (y - edge2[0].Y)) - ((edge2[1].Y - edge2[0].Y) * (x - edge2[0].X))
+			determinate = ((t.p2d3.X - t.p2d1.X) * (y - t.p2d1.Y)) - ((t.p2d3.Y - t.p2d1.Y) * (x - t.p2d1.X))
 			if determinate > 0.0 {
 				t.pixels = append(t.pixels, tuple.NewPnt3(x, y, 0))
 			}
